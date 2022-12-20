@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import { Routes, Route, browserRouter, Link } from 'react-router-dom'
 import Home from './Home'
 import SelectedCounty from './SelectedCounty'
+import { style } from './App.css'
 
 const App = () => {
   const [countries, setCountries] = useState([])
@@ -12,9 +13,14 @@ const App = () => {
   //render element to screen
 
   async function Render(api) {
-    const res = await fetch(api)
-    const data = await res.json()
-    await setCountries(data)
+    try {
+      const res = await fetch(api)
+
+      const data = await res.json()
+      await setCountries(data)
+    } catch {
+      console.log('error')
+    }
   }
 
   useEffect(() => {
@@ -33,7 +39,7 @@ const App = () => {
 
   return (
     <div className="container ">
-      <div className="blokElement">
+      {/* <div className="blokElement">
         <div className="searchBar">
           <input
             ref={refContainer}
@@ -72,10 +78,19 @@ const App = () => {
         </select>
 
         <Link to="/index">About</Link>
-      </div>
+      </div> */}
 
       <Routes>
-        <Route path="" element={<Home countries={countries} />} />
+        <Route
+          path=""
+          element={
+            <Home
+              refContainer={refContainer}
+              setApi={setApi}
+              countries={countries}
+            />
+          }
+        />
         <Route path="/:name" element={<SelectedCounty />} />
       </Routes>
     </div>
